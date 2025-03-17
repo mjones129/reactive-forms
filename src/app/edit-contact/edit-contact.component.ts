@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { ContactsService } from '../contacts/contacts.service';
 import { phoneTypeValues, addressTypeValues } from '../contacts/contact.model';
+import { restrictedWords } from '../validators/restricted-words.validator';
 
 @Component({
   templateUrl: './edit-contact.component.html',
@@ -29,7 +30,7 @@ export class EditContactComponent implements OnInit {
       postalCode: ['', Validators.required],
       addressType: ''
     }),
-    notes: ''
+    notes: ['', restrictedWords],
   });
 
   constructor(
@@ -53,6 +54,9 @@ export class EditContactComponent implements OnInit {
     return this.contactForm.controls.firstName
   }
 
+  get notes() {
+    return this.contactForm.controls.notes
+  }
   saveContact() {
     this.contactService.saveContact(this.contactForm.getRawValue()).subscribe({
       next: () => this.router.navigate(['/contacts'])
