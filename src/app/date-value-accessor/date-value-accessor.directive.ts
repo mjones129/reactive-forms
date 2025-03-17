@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Provider, forwardRef } from '@angular/core';
+import { Directive, ElementRef, HostListener, Provider, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 const DATE_VALUE_PROVIDER: Provider = {
@@ -15,6 +15,22 @@ const DATE_VALUE_PROVIDER: Provider = {
 export class DateValueAccessorDirective implements ControlValueAccessor {
 
   constructor(private element: ElementRef) { }
+
+  @HostListener('input', ['$event.target.valueAsDate'])
+  private onChange!: Function;
+
+  @HostListener('blur')
+  private onTouched!: Function;
+
+  registerOnChange(fn: Function): void {
+    this.onChange = (valueAsDate: Date) => {
+      fn(valueAsDate);
+    };
+  }
+
+  registerOnTouched(fn: Function): void {
+    this.onTouched = fn;
+  }
 
   writeValue(newValue:any) {
     //yyyy-mm-dd
